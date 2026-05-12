@@ -15,8 +15,6 @@ import asyncio
 import sys
 from datetime import datetime, timezone
 
-import asyncpg
-
 from tools._config import Config
 from tools._db import pg
 
@@ -101,16 +99,16 @@ def _print_undo(ts: str, org_id: str) -> None:
     print()
     print("# Undo (valid until next reset overwrites updated_at):")
     print(
-        f"# UPDATE nodes               SET soft_deleted=false WHERE org_id='{org_id}' AND updated_at >= '{ts}';"
+        f"# UPDATE nodes               SET soft_deleted=false, deleted_at=NULL WHERE org_id='{org_id}' AND updated_at >= '{ts}';"
     )
     print(
-        f"# UPDATE node_columns        SET soft_deleted=false WHERE node_id IN (SELECT id FROM nodes WHERE org_id='{org_id}') AND updated_at >= '{ts}';"
+        f"# UPDATE node_columns        SET soft_deleted=false, deleted_at=NULL WHERE node_id IN (SELECT id FROM nodes WHERE org_id='{org_id}') AND updated_at >= '{ts}';"
     )
     print(
-        f"# UPDATE node_descriptions   SET is_deleted=false   WHERE node_id IN (SELECT id FROM nodes WHERE org_id='{org_id}') AND updated_at >= '{ts}';"
+        f"# UPDATE node_descriptions   SET is_deleted=false,   deleted_at=NULL WHERE node_id IN (SELECT id FROM nodes WHERE org_id='{org_id}') AND updated_at >= '{ts}';"
     )
     print(
-        f"# UPDATE nodes_connection    SET soft_deleted=false WHERE (from_node_id IN (SELECT id FROM nodes WHERE org_id='{org_id}') OR to_node_id IN (SELECT id FROM nodes WHERE org_id='{org_id}')) AND updated_at >= '{ts}';"
+        f"# UPDATE nodes_connection    SET soft_deleted=false, deleted_at=NULL WHERE (from_node_id IN (SELECT id FROM nodes WHERE org_id='{org_id}') OR to_node_id IN (SELECT id FROM nodes WHERE org_id='{org_id}')) AND updated_at >= '{ts}';"
     )
 
 

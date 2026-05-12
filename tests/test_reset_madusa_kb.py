@@ -6,7 +6,7 @@ Tests assert: dry-run prints expected counts without executing UPDATEs;
 blocks reset unless --force passed.
 """
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 from tools.reset_madusa_kb import plan_reset, execute_reset, in_flight_run_exists
 
