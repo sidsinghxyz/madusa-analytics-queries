@@ -24,7 +24,7 @@ class Config:
     org_id: str
     project_id: str
     database_id: str
-    github_repo_url: str = "https://github.com/uncypher-stem/madusa-analytics-queries"
+    github_repo_url: str = "https://github.com/sidsinghxyz/madusa-analytics-queries"
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -47,6 +47,6 @@ class Config:
             database_id=os.environ.get("MADUSA_DATABASE_ID", MADUSA_DATABASE_ID),
             github_repo_url=os.environ.get(
                 "MADUSA_QUERIES_REPO",
-                "https://github.com/uncypher-stem/madusa-analytics-queries",
+                "https://github.com/sidsinghxyz/madusa-analytics-queries",
             ),
         )

@@ -20,7 +20,7 @@ from tools._api import ApiClient
 from tools._config import Config
 
 
-REPO_OWNER = "uncypher-stem"
+REPO_OWNER = "sidsinghxyz"
 REPO_NAME = "madusa-analytics-queries"
 BRANCH = "main"
 DISPLAY_NAME = "Madusa Analytics Queries"

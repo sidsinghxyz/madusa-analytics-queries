@@ -23,7 +23,7 @@ CFG = Config(
     org_id="org-1",
     project_id="proj-1",
     database_id="db-1",
-    github_repo_url="https://github.com/uncypher-stem/madusa-analytics-queries",
+    github_repo_url="https://github.com/sidsinghxyz/madusa-analytics-queries",
 )
 
 
@@ -41,7 +41,7 @@ async def test_connect_happy_path():
                 "id": "cb-xyz",
                 "org_id": "org-1",
                 "provider": "github",
-                "repo_owner": "uncypher-stem",
+                "repo_owner": "sidsinghxyz",
                 "repo_name": "madusa-analytics-queries",
                 "branch": "main",
                 "display_name": "Madusa Analytics Queries",
@@ -67,7 +67,7 @@ async def test_connect_idempotent_when_existing():
         "id": "cb-existing",
         "org_id": "org-1",
         "provider": "github",
-        "repo_owner": "uncypher-stem",
+        "repo_owner": "sidsinghxyz",
         "repo_name": "madusa-analytics-queries",
         "branch": "main",
         "display_name": "Madusa Analytics Queries",
@@ -96,7 +96,7 @@ async def test_connect_polls_until_active():
     )
     base_cb = {
         "id": "cb-1", "org_id": "org-1", "provider": "github",
-        "repo_owner": "uncypher-stem", "repo_name": "madusa-analytics-queries",
+        "repo_owner": "sidsinghxyz", "repo_name": "madusa-analytics-queries",
         "branch": "main", "display_name": "Madusa Analytics Queries",
         "repo_key": "madusa-analytics-queries", "is_public": True,
         "created_at": "2026-05-12T00:00:00Z",
