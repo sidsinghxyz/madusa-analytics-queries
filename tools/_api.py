@@ -39,9 +39,11 @@ class ApiClient:
             self._client = None
 
     async def get(self, path: str, **kwargs: Any) -> httpx.Response:
-        assert self._client is not None, "use as `async with ApiClient(...)`"
+        if self._client is None:
+            raise RuntimeError("ApiClient must be used as `async with ApiClient(...)`")
         return await self._client.get(path, **kwargs)
 
     async def post(self, path: str, **kwargs: Any) -> httpx.Response:
-        assert self._client is not None, "use as `async with ApiClient(...)`"
+        if self._client is None:
+            raise RuntimeError("ApiClient must be used as `async with ApiClient(...)`")
         return await self._client.post(path, **kwargs)

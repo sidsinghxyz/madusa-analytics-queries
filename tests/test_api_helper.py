@@ -39,3 +39,11 @@ async def test_requires_jwt():
     """Construction with jwt=None raises a clear error."""
     with pytest.raises(RuntimeError, match="DEV_JWT"):
         ApiClient(base_url="https://api.example", jwt=None)
+
+
+@pytest.mark.asyncio
+async def test_get_outside_context_manager_raises():
+    """Using ApiClient outside `async with` raises a clear RuntimeError."""
+    client = ApiClient(base_url="https://api.example", jwt="t")
+    with pytest.raises(RuntimeError, match="async with"):
+        await client.get("/test")
