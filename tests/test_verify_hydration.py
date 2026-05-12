@@ -84,3 +84,40 @@ async def test_compute_report_warns_when_v2_disabled():
     assert report["kb_bulk_v2_enabled"] is False
     assert report_passes(report) is False
     assert "KB_BULK_V2_ENABLED" in format_report(report)
+
+
+@pytest.mark.asyncio
+async def test_compute_report_decodes_parsing_stats_when_string():
+    """asyncpg returns JSON columns as raw strings unless a codec is set.
+    compute_report must handle both shapes."""
+    kb_conn = AsyncMock()
+    kb_conn.fetchval = AsyncMock(side_effect=[1, 1, 1, 1, 1])
+    backend_conn = AsyncMock()
+    backend_conn.fetchrow = AsyncMock(return_value={
+        "parsing_stats": '{"phantom_tables": ["customer_segments"]}',  # raw string, not dict
+    })
+    report = await compute_report(
+        kb_conn=kb_conn, backend_conn=backend_conn,
+        run_id="r-1", org_id="org-1",
+        log_text="kb_bulk.agent_descriptions: ...",
+        kb_bulk_v2_enabled=True,
+    )
+    assert report["phantom_table_flagged"] is True
+
+
+@pytest.mark.asyncio
+async def test_compute_report_handles_malformed_parsing_stats():
+    """If parsing_stats is non-JSON garbage, treat as empty dict (don't crash)."""
+    kb_conn = AsyncMock()
+    kb_conn.fetchval = AsyncMock(side_effect=[1, 1, 1, 1, 1])
+    backend_conn = AsyncMock()
+    backend_conn.fetchrow = AsyncMock(return_value={
+        "parsing_stats": "not-json{",
+    })
+    report = await compute_report(
+        kb_conn=kb_conn, backend_conn=backend_conn,
+        run_id="r-1", org_id="org-1",
+        log_text="kb_bulk.agent_descriptions: ...",
+        kb_bulk_v2_enabled=True,
+    )
+    assert report["phantom_table_flagged"] is False  # garbage → no phantoms

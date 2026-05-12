@@ -92,6 +92,11 @@ async def compute_report(
         report[key] = await kb_conn.fetchval(sql, org_id) or 0
     row = await backend_conn.fetchrow(_BACKEND_RUN, run_id, org_id)
     parsing_stats = (row or {}).get("parsing_stats") or {}
+    if isinstance(parsing_stats, str):
+        try:
+            parsing_stats = json.loads(parsing_stats)
+        except (ValueError, TypeError):
+            parsing_stats = {}
     phantoms = parsing_stats.get("phantom_tables") or []
     report["phantom_table_flagged"] = bool(phantoms)
     report["confidence_dist_log_present"] = "kb_bulk.agent_descriptions" in log_text
