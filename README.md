@@ -64,13 +64,26 @@ make verify RUN_ID=<id>
 Output is a tick/cross coverage table over the Phase 3 hydration paths.
 Exit code 0 = all pass, non-zero = something missing.
 
-## Phase 3 acceptance one-liner
+## Phase 3 acceptance — three-step flow
+
+There's no single one-liner because Generate KB has to be triggered manually
+between the wipe and the verify. The split targets make the steps explicit:
 
 ```bash
-make accept-phase3 RUN_ID=<id>
+# 1. Wipe Madusa KB so the run starts clean
+make accept-phase3-reset
+
+# 2. (Manual) Trigger Generate KB on Madusa via the UI, point it at
+#    madusa-analytics-queries/queries/ in this codebase, wait for the run
+#    to complete. Note the RUN_ID from the UI.
+
+# 3. Verify hydration coverage
+make accept-phase3-verify RUN_ID=<id>
+# or with captured backend logs:
+make accept-phase3-verify RUN_ID=<id> LOG_FILE=/tmp/madusa_run.log
 ```
 
-Chains `reset-apply` → `verify`. Trigger Generate KB between the two calls.
+Exit 0 from step 3 = full Phase 3 hydration coverage.
 
 ## Constants
 

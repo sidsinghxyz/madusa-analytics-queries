@@ -1,6 +1,6 @@
 # Madusa Analytics Seed — operator commands.
 
-.PHONY: install test connect reset reset-apply verify accept-phase3
+.PHONY: install test connect reset reset-apply verify accept-phase3-reset accept-phase3-verify
 
 install:
 	pip install -e ".[dev]"
@@ -21,9 +21,12 @@ verify:
 	@if [ -z "$(RUN_ID)" ]; then echo "RUN_ID is required: make verify RUN_ID=<id>"; exit 2; fi
 	python -m tools.verify_hydration --run-id $(RUN_ID) $(if $(LOG_FILE),--log-file $(LOG_FILE),)
 
-# Chain reset → (user triggers Generate KB run via UI or curl) → verify
-# RUN_ID is provided after the trigger.
-accept-phase3:
-	@if [ -z "$(RUN_ID)" ]; then echo "RUN_ID is required: make accept-phase3 RUN_ID=<id>"; exit 2; fi
+# Step 1 of acceptance: soft-wipe Madusa KB so Generate KB has a clean slate.
+# Step 2 (manual): operator triggers a Generate KB run in the UI and grabs the RUN_ID.
+# Step 3 of acceptance: run verify against the RUN_ID.
+accept-phase3-reset:
 	$(MAKE) reset-apply
-	$(MAKE) verify RUN_ID=$(RUN_ID)
+
+accept-phase3-verify:
+	@if [ -z "$(RUN_ID)" ]; then echo "RUN_ID is required: make accept-phase3-verify RUN_ID=<id>"; exit 2; fi
+	$(MAKE) verify RUN_ID=$(RUN_ID) $(if $(LOG_FILE),LOG_FILE=$(LOG_FILE),)
