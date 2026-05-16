@@ -40,7 +40,7 @@ class Config:
             ),
             backend_pg_dsn=os.environ.get(
                 "BACKEND_PG_DSN",
-                "postgresql://postgres:postgres@uncypher-postgres:5432/data_decipher",
+                "postgresql://postgres:postgres@uncypher-postgres:5432/datadecipher",
             ),
             org_id=os.environ.get("MADUSA_ORG_ID", MADUSA_ORG_ID),
             project_id=os.environ.get("MADUSA_PROJECT_ID", MADUSA_PROJECT_ID),
